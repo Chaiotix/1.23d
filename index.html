@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lair_OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&family=Roboto+Mono:wght@400;500&family=Chivo+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --font-sans: 'Inter', sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+        
+        /* Will be dynamically controlled by SettingsContext */
+        --accent-color: #00A9FF; 
+        --accent-color-rgb: 0, 169, 255;
+        
+        /* Base Colors (Dark Theme) */
+        --color-bg-base: #101010;
+        --color-bg-surface: rgba(25, 25, 25, 0.6); /* Adjusted transparency for better readability */
+        --color-bg-surface-2: #212121;
+        --color-bg-muted: #2c2c2c;
+        --color-border-default: #333333;
+        --color-border-subtle: #2a2a2a;
+        --color-text-primary: #f5f5f5;
+        --color-text-secondary: #a3a3a3;
+        --color-text-tertiary: #737373;
+        --color-text-accent: var(--accent-color);
+      }
+
+      /* Matrix Theme Definition */
+      [data-theme='matrix'] {
+        --font-sans: 'Chivo Mono', monospace;
+        --font-mono: 'Chivo Mono', monospace;
+        --accent-color: #39ff14;
+        --accent-color-rgb: 57, 255, 20;
+        --color-bg-base: #0d0d0d;
+        --color-bg-surface: rgba(10, 20, 10, 0.6);
+        --color-bg-surface-2: #050505;
+        --color-bg-muted: #1a1a1a;
+        --color-border-default: #11ff33;
+        --color-border-subtle: #008000;
+        --color-text-primary: #39ff14;
+        --color-text-secondary: #33dd11;
+        --color-text-tertiary: #22aa00;
+      }
+      
+      /* Light Theme Definition */
+      [data-theme='light'] {
+        --color-bg-base: #f0f2f5;
+        --color-bg-surface: rgba(255, 255, 255, 0.6);
+        --color-bg-surface-2: #ffffff;
+        --color-bg-muted: #e9ecef;
+        --color-border-default: #ced4da;
+        --color-border-subtle: #dee2e6;
+        --color-text-primary: #212529;
+        --color-text-secondary: #495057;
+        --color-text-tertiary: #6c757d;
+      }
+
+      body {
+        font-family: var(--font-sans);
+        background-color: var(--color-bg-base);
+        color: var(--color-text-primary);
+        overflow: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-image: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), var(--desktop-bg);
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        transition: background-color 0.5s ease;
+      }
+      
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+
+      @keyframes fade-out {
+        from { opacity: 1; }
+        to { opacity: 0; }
+      }
+      
+      @keyframes fade-in-scale {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+      }
+
+      .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+      .animate-fade-out { animation: fade-out 0.3s ease-in forwards; }
+      .animate-fade-in-scale { animation: fade-in-scale 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+      
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: var(--color-bg-muted);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--accent-color);
+      }
+      
+      /* Custom Text Selection */
+      ::selection {
+        background: var(--accent-color);
+        color: var(--color-bg-base);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "@google/genai": "https://esm.sh/@google/genai@^0.14.0",
+    "react-dom/": "https://esm.sh/react-dom@18.3.1/",
+    "react/": "https://esm.sh/react@18.3.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <!-- Lair_OS Aperture Logo SVG definition -->
+    <svg width="0" height="0" style="display: none;">
+      <defs>
+        <symbol id="lair-os-aperture-logo" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-8c0-1.06.35-2.04.94-2.85L15.85 9.94c.04.35.06.7.06 1.06c0 2.76-2.24 5-5 5s-5-2.24-5-5zm5 6c1.06 0 2.04-.35 2.85-.94L9.94 8.15C9.6 8.11 9.3 8.09 9 8.09c-2.76 0-5 2.24-5 5s2.24 5 5 5z"></path>
+        </symbol>
+      </defs>
+    </svg>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
